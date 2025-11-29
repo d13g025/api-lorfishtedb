@@ -1,35 +1,403 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Minha API",
-      "description": "API para demonstrar integração com Swagger",
-      "version": "1.0.0"
-    },
-    "servers": [
-      {
-        "url": "http://localhost:3000/api",
-        "description": "Servidor local"
-      }
-    ],
-    "paths": {
-      "/": {
-        "get": {
-          "summary": "Exibe mensagem de boas-vindas",
-          "responses": {
-            "200": {
-              "description": "Mensagem de boas-vindas",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "message": "Bem-vindo à API!"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Minha API LorfishteDB",
+    "description": "API para gestão de peixes – referência, busca e estatísticas",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/reference/fishes": {
+      "get": {
+        "tags": [
+          "Reference"
+        ],
+        "summary": "Lista todas as espécies de peixes (fishes)",
+        "responses": {
+          "200": {
+            "description": "Lista de peixes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id_specie_fish": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "scientific_name_fish": {
+                        "type": "string",
+                        "example": "Astyanax altiparanae"
+                      }
+                    }
                   }
                 }
               }
             }
+          },
+          "500": {
+            "description": "Erro interno"
           }
         }
       }
-      
+    },
+    "/reference/superfamilies": {
+      "get": {
+        "tags": [
+          "Reference"
+        ],
+        "summary": "Lista todas as superfamílias",
+        "responses": {
+          "200": {
+            "description": "Lista de superfamílias",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id_superfamily": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "superfamily_name": {
+                        "type": "string",
+                        "example": "crypton"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    },
+    "/reference/orders": {
+      "get": {
+        "tags": [
+          "Reference"
+        ],
+        "summary": "Lista todas as ordens",
+        "responses": {
+          "200": {
+            "description": "Lista de ordens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id_order": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "order_name": {
+                        "type": "string",
+                        "example": "line"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    },
+    "/reference/classes": {
+      "get": {
+        "tags": [
+          "Reference"
+        ],
+        "summary": "Lista todas as classes",
+        "responses": {
+          "200": {
+            "description": "Lista de classes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id_class": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "class_name": {
+                        "type": "string",
+                        "example": "transposon"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "tags": [
+          "Search"
+        ],
+        "summary": "Busca peixes com filtros e paginação",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Número da página (padrão = 1)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50
+            },
+            "description": "Quantidade de itens por página"
+          },
+          {
+            "name": "fish",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtro por nome do peixe"
+          },
+          {
+            "name": "class",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtro por classe"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtro por ordem"
+          },
+          {
+            "name": "superfamily",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtro por superfamília"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultado da busca (paginado)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "page": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "example": 50
+                    },
+                    "total": {
+                      "type": "integer",
+                      "example": 123
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "genome_id": {
+                            "type": "integer",
+                            "example": 101
+                          },
+                          "fish_name": {
+                            "type": "string",
+                            "example": "Astyanax altiparanae"
+                          },
+                          "chromosome": {
+                            "type": "string",
+                            "example": "1"
+                          },
+                          "start_position": {
+                            "type": "integer",
+                            "example": 12345
+                          },
+                          "end_position": {
+                            "type": "integer",
+                            "example": 67890
+                          },
+                          "strand": {
+                            "type": "string",
+                            "example": "+"
+                          },
+                          "te_name": {
+                            "type": "string",
+                            "example": "TE_ABC"
+                          },
+                          "class_name": {
+                            "type": "string",
+                            "example": "Actinopterygii"
+                          },
+                          "order_name": {
+                            "type": "string",
+                            "example": "Characiformes"
+                          },
+                          "superfamily_name": {
+                            "type": "string",
+                            "example": "Characoidea"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    },
+    "/statistics": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Retorna estatísticas agregadas para um peixe específico",
+        "parameters": [
+          {
+            "name": "fish",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Nome do peixe a ser consultado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estatísticas por classe, ordem e superfamília",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fish": {
+                      "type": "string",
+                      "example": "Astyanax altiparanae"
+                    },
+                    "statistics": {
+                      "type": "object",
+                      "properties": {
+                        "classes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "example": "Actinopterygii"
+                              },
+                              "total": {
+                                "type": "integer",
+                                "example": 42
+                              }
+                            }
+                          }
+                        },
+                        "orders": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "example": "Characiformes"
+                              },
+                              "total": {
+                                "type": "integer",
+                                "example": 17
+                              }
+                            }
+                          }
+                        },
+                        "superfamilies": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "example": "Characoidea"
+                              },
+                              "total": {
+                                "type": "integer",
+                                "example": 5
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetro 'fish' obrigatório não enviado"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
     }
   }
-  
+}
